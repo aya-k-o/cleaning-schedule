@@ -7,16 +7,17 @@ if (isset($_POST['add_employee'])) {
 }
 
 if (isset($_POST['delete_employee'])) {
-    $check = $pdo->prepare("SELECT COUNT(*) FROM schedule WHERE employee_id = :id");
-    $check->execute([':id' => $_POST['employee_id']]);
-    $count = $check->fetchColumn();
+    $stmt = $pdo->prepare("UPDATE employees SET is_active = 0 WHERE id = :id");
+    $stmt->execute([':id' => $_POST['employee_id']]);
+}
 
-    if ($count > 0) {
-        $employee_error = 'この社員は当番履歴に登録されているため削除できません。';
-    } else {
-        $stmt = $pdo->prepare("DELETE FROM employees WHERE id = :id");
-        $stmt->execute([':id' => $_POST['employee_id']]);
-    }
+
+if (isset($_POST['permanent_delete_employee'])) {
+    $stmt = $pdo->prepare("DELETE FROM schedule WHERE employee_id = :id");
+    $stmt->execute([':id' => $_POST['employee_id']]);
+    
+    $stmt = $pdo->prepare("DELETE FROM employees WHERE id = :id");
+    $stmt->execute([':id' => $_POST['employee_id']]);
 }
 
 if (isset($_POST['add_location'])) {
@@ -37,7 +38,8 @@ if (isset($_POST['delete_location'])) {
     }
 }
 
-$employees = $pdo->query("SELECT * FROM employees")->fetchAll();
+$employees = $pdo->query("SELECT * FROM employees WHERE is_active = 1")->fetchAll();
+$retired = $pdo->query("SELECT * FROM employees WHERE is_active = 0")->fetchAll();
 $locations = $pdo->query("SELECT * FROM locations")->fetchAll();
 ?>
 
@@ -60,6 +62,7 @@ $locations = $pdo->query("SELECT * FROM locations")->fetchAll();
         <p class="error"><?= $employee_error ?></p>
       <?php endif; ?>
       <form method="post">
+
         <div class="form-row">
           <input type="text" name="employee_name" placeholder="社員名">
           <button type="submit" name="add_employee">追加</button>
@@ -78,12 +81,34 @@ $locations = $pdo->query("SELECT * FROM locations")->fetchAll();
           <td>
             <form method="post">
               <input type="hidden" name="employee_id" value="<?= $employee['id'] ?>">
-              <button type="submit" name="delete_employee" class="delete-btn">削除</button>
+              <button type="submit" name="delete_employee" class="delete-btn">退職</button>
             </form>
           </td>
         </tr>
         <?php endforeach; ?>
       </table>
+      <?php if (!empty($retired)): ?>
+      <h2>退職済み社員</h2>
+      <table>
+        <tr>
+          <th>ID</th>
+          <th>名前</th>
+          <th>操作</th>
+        </tr>
+        <?php foreach ($retired as $employee): ?>
+        <tr>
+          <td><?= $employee['id'] ?></td>
+          <td><?= htmlspecialchars($employee['name']) ?></td>
+          <td>
+            <form method="post">
+              <input type="hidden" name="employee_id" value="<?= $employee['id'] ?>">
+              <button type="submit" name="permanent_delete_employee" class="delete-btn" onclick="return confirm('本当に完全削除しますか？この操作は取り消せません。')">完全削除</button>
+            </form>
+          </td>
+        </tr>
+          <?php endforeach; ?>
+        </table>
+        <?php endif; ?>
     </div>
     <div class="card">
       <h2>場所管理</h2>
