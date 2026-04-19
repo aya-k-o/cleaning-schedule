@@ -31,3 +31,5 @@ DB設計
 index.php：当番表の表示
 assign.php：当番の自動割り当て
 admin.php：社員・場所の管理画面
+## 公開URL
+https://ayakomochi.xsrv.jp/cleaning/
