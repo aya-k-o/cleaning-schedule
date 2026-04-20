@@ -34,12 +34,21 @@ $results = $stmt->fetchAll();
           <th>場所</th>
           <th>担当者</th>
         </tr>
-        <?php foreach ($results as $row): ?>
-        <tr>
-          <td><?= htmlspecialchars($row['location_name']) ?></td>
-          <td><span class="badge"><?= htmlspecialchars($row['employee_name']) ?></span></td>
-        </tr>
-        <?php endforeach; ?>
+
+
+<?php if (empty($results)): ?>
+<tr>
+  <td colspan="2">データがありません。当番を割り当ててください。</td>
+</tr>
+<?php else: ?>
+<?php foreach ($results as $row): ?>
+<tr>
+  <td><?= htmlspecialchars($row['location_name']) ?></td>
+  <td><span class="badge"><?= htmlspecialchars($row['employee_name']) ?></span></td>
+</tr>
+<?php endforeach; ?>
+<?php endif; ?>
+            
       </table>
       <div class="actions">
         <a href="assign.php">当番を割り当てる</a>
