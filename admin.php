@@ -1,6 +1,50 @@
 <?php
-require 'db_connect.php';
+session_start();
 
+$password = 'pass1234';
+
+if (!isset($_SESSION['admin_logged_in'])) {
+    if (isset($_POST['password']) && $_POST['password'] === $password) {
+        $_SESSION['admin_logged_in'] = true;
+    } else {
+        if (isset($_POST['password'])) {
+            $login_error = 'パスワードが違います。';
+        }
+        ?>
+        <!DOCTYPE html>
+        <html lang="ja">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <link rel="stylesheet" href="style.css">
+          <title>管理画面 ログイン</title>
+        </head>
+        <body>
+          <div class="container">
+            <header>
+              <h1>管理画面</h1>
+            </header>
+            <div class="card">
+              <h2>ログイン</h2>
+              <?php if (isset($login_error)): ?>
+              <p class="error"><?= $login_error ?></p>
+              <?php endif; ?>
+              <form method="post">
+                <div class="form-row">
+                  <input type="password" name="password" placeholder="パスワード">
+                  <button type="submit">ログイン</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </body>
+        </html>
+        <?php
+        exit;
+    }
+}
+
+require 'db_connect.php';
 if (isset($_POST['add_employee'])) {
     $stmt = $pdo->prepare("INSERT INTO employees (name) VALUES (:name)");
     $stmt->execute([':name' => $_POST['employee_name']]);
