@@ -73,8 +73,6 @@
 - schedule.employee_id → employees.id（外部キー）
 - schedule.location_id → locations.id（外部キー）
 
-## 設計ドキュメント
-- [要件定義書](docs/requirements.md)
 ---
 
 ## 5. 画面遷移
