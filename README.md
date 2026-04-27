@@ -71,3 +71,6 @@
 | employees | 社員情報 |
 | locations | 掃除場所情報 |
 | schedule | 当番履歴 |
+
+## 設計ドキュメント
+- [要件定義書](docs/requirements.md)
