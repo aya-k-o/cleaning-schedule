@@ -12,7 +12,7 @@
 
 ## 公開URL
 
-🧹 **https://ayakomochi.xsrv.jp/cleaning/**
+🧹 **https://ayako-k.com/cleaning/**
 
 ---
 
