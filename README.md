@@ -14,6 +14,8 @@
 
 🧹 **https://ayako-k.com/cleaning/**
 
+> 管理画面パスワード：pass1234
+
 ---
 
 ## 画面一覧
